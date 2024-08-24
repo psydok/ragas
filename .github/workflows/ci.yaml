@@ -39,6 +39,8 @@ jobs:
               - *related
               - "src/ragas/**"
               - "tests/**"
+            ragas_experimental:
+              - "src/experimental/**"
             docs:
               - *related
               - requirements/docs-requirements.txt
@@ -95,7 +97,7 @@ jobs:
             OPTS=(--dist loadfile -n auto)
           fi
           # Now run the unit tests
-          pytest tests/unit "${OPTS[@]}"
+          pytest --nbmake tests/unit "${OPTS[@]}"
         env:
           __RAGAS_DEBUG_TRACKING: true
           RAGAS_DO_NOT_TRACK: true
@@ -148,4 +150,4 @@ jobs:
         run: make lint
       - name: Type check
         if: ${{ github.event_name == 'pull_request' }}
-        run: git diff --name-only --diff-filter=AM "origin/$GITHUB_BASE_REF" -z -- 'src/**/*.py' 'src/**/*.pyi' | xargs -0 --no-run-if-empty pyright
+        run: make type
